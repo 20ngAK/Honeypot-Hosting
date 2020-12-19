@@ -25,23 +25,23 @@ Here's a few credit links to some popular providers:
 Once you get signed up, you may want to set up [usage alerts](https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/tracking-free-tier-usage.html), particularly with AWS EC2, to make sure you're not going over your free tier usage and being charged. Otherwise, If you don't want to be charged after these trial periods or credits expire, you need to remember to delete the machine(s) once you've concluded your research. Of course, make sure to backup any important data or logs that you will need for later before deleting the machine. 
 
 ![](images/billingalarm.png)
-AWS EC2 estimated billing alarm setup.
+*AWS EC2 estimated billing alarm setup.*
 
 # Choosing a machine
 Before deploying your first virtual machine, you'll have to choose a plan for it. This will determine what resources are allocated to your machine. You'll see a variety of options for different CPU, memory and storage options along with their respective pricing. You may even see machines falling under "shared" or "dedicated" plans. Like we mentioned earlier, for our testing purposes the "shared" CPU plans will typically work fine. These are a single physical server with multiple users sharing resources. They're designed for usage situations that can handle variable levels of processing power unlike production workloads which would need their own dedicated resources. Depending on the provider, the low end of those shared plans typically will allocate ~1 CPU, ~1GB RAM and ~25GB of storage. You can make a choice based on the requirements of the honeypot you plan on running. Also consider any resources you may need if you plan to run some sort of logging platform on the same machine. 
 
 ![](images/plans.png)
-Digital Ocean plan selection. 
+*Digital Ocean plan selection.*
 
 You'll have to choose a region where the data center and thus the physical server housing your virtual machine, is located. This is an important consideration regarding latency, so it's usually best to choose something as close to your location as possible. 
 
 ![](images/region.png)
-Digital Ocean data center region selection.
+*Digital Ocean data center region selection.*
 
 Along with choosing the resources for your machine, you'll have to select an image for it. Most providers will have various GNU/Linux distributions ready to select from or even have a marketplace full of various others for specific use cases. You can usually even provide your own custom image as well. Most of the honeypots we're currently researching, are centered around deployment in a Debian-based distro. 
 
 ![](images/awsmachine.png)
-Quick start EC2 Linux Amazon Machine Images (AMI).
+*Quick start EC2 Linux Amazon Machine Images (AMI).*
 
 # Accessing your machine 
 When creating the machine you'll be prompted to create a password. This password will be used to log into the [`root`](https://mediatemple.net/community/products/dv/204643890/an-introduction-to-the-root-user) user account. It's important to remember that the `root` user has the highest privileges and complete control over the entire system. This means it's important from a security standpoint, to set a very strong password or [passphrase](https://protonmail.com/blog/protonmail-com-blog-password-vs-passphrase/). I would highly recommend using [key-based authentication](https://www.ssh.com/ssh/public-key-authentication) instead of a password from the get-go, if your provider supports it during creation of the machine. Either way, we'll do this later so you can just the password in the meantime.  
@@ -49,12 +49,12 @@ When creating the machine you'll be prompted to create a password. This password
 We'll be interacting with our new machine through [SSH](https://www.hostinger.com/tutorials/ssh-tutorial-how-does-ssh-work). You'll most commonly work with SSH from the command-line if you're already on GNU/Linux, MacOS or even using [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10). Otherwise if you're on Windows, [PuTTY](https://www.putty.org/) is a popular SSH client. 
 
 ![](images/droplet.png)
-Newly created Digital Ocean droplet(virtual machine). Note the public IP address, at which you can reach the machine via SSH.
+*Newly created Digital Ocean droplet(virtual machine). Note the public IP address, at which you can reach the machine via SSH.*
 
-Since we're not using key-based authentication yet and only have the `root` password set. We can go ahead and open a terminal or PuTTY on our personal machine and SSH into our new server. From your terminal you can run ```$ ssh root@ipaddress```. It will try to connect on the default port 22 of your server. 
+Since we're not using key-based authentication yet and only have the `root` password set. We can go ahead and open a terminal or PuTTY on our personal machine and SSH into our new server. From your terminal you can run ```$ ssh root@ipaddress```. It will attempt to connect on the default port 22 of your server. 
 
 ![](images/putty.png)
-Example of PuTTY SSH client. Note `user@ipaddress` format.
+*Example of PuTTY SSH client. Note `user@ipaddress` format.*
 
 ![](images/sshconnection.png)
 
