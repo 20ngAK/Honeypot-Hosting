@@ -1,13 +1,7 @@
----
-geometry: "left=2cm,right=2cm,top=2cm, bottom=2cm"
-output: pdf_document
-urlcolor: blue
----
-
 # Captured shell script sample
 Captured within [Cowrie SSH honeypot](https://github.com/cowrie/cowrie). 12/06/2020 @ 08:45:11 UTC
 
-![](log.png)
+![](images/log.png)
 *Cowrie.log*
 
 
@@ -25,6 +19,6 @@ The script appears to be fairly similar to what was described in a Sans ISC Diar
 
 #
 
-![](virustotal.png)
+![](images/virustotal.png)
 *VirusTotal detections.*
 
