@@ -98,7 +98,7 @@ Give the command the IP address of your honeypot server as well as the username 
 `$ ssh-copy-id username@ipaddress` 
 
 *Method 2:
-This will utilize some interesting parts of GNU/Linux, including [pipes](https://www.geeksforgeeks.org/piping-in-unix-or-linux/) and [stream redirection](https://www.digitalocean.com/community/tutorials/an-introduction-to-linux-i-o-redirection).*
+This will utilize some interesting [*nix](https://www.geeksforgeeks.org/introduction-to-unix-system/) concepts, including [pipes](https://www.geeksforgeeks.org/piping-in-unix-or-linux/) and [stream redirection](https://www.digitalocean.com/community/tutorials/an-introduction-to-linux-i-o-redirection).*
 
 `$ cat ~/.ssh/id_rsa.pub | ssh username@ipaddress "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"`
 
@@ -148,5 +148,7 @@ On your personal machine, head over to the `.ssh` directory. Inside there you'll
 
 Going forward, anytime we want to connect to our server we can just use `$ ssh honeypot`. 
 
-# Start your honeypot!
-You now have a base install ready for further installation and configuration of your chosen honeypot! Feel free to reach out to me in Slack @AK with any questions or to correct an error in this document. 
+# Next step - Start your honeypot!
+You now have a more secure base install ready for further installation/configuration of your chosen honeypot.
+
+**Feel free to reach out to me in Slack @AK with questions or to correct any errors in this document!**
