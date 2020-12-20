@@ -51,14 +51,13 @@ We'll be interacting with our new machine through [SSH](https://www.hostinger.co
 ![](images/droplet.png)
 *Newly created Digital Ocean droplet (virtual machine). Note the public IP address, at which you can reach the machine via SSH.*
 
-Since we're not using key-based authentication yet and only have the `root` password set. We can go ahead and open a terminal or PuTTY on our personal machine and SSH into our new server. From your terminal you can run ```$ ssh root@ipaddress```. It will attempt to connect on the default port 22 of your server. 
+Since we're not using key-based authentication yet and only have the `root` password set. We can go ahead and open a terminal or PuTTY on our personal machine and SSH into our new server. From your terminal you can run ```$ ssh root@ipaddress```. It will attempt to connect on the default port 22 of your server. You'll be asked if you want to continue connecting, this happens when you connect to a new host for the first time. You can respond with `yes` to continue. 
 
 ![](images/putty.png)
 
-*Example of PuTTY SSH client. Note `user@ipaddress` format.*
+*Example of the PuTTY SSH client. Note `user@ipaddress` format.*
 
 ![](images/sshconnection.png)
-
 
 # Hardening SSH
 **Just in case anybody is new to GNU/Linux or Unix in general, I wanted to put this out in the beginning so you don't get confused with some of the examples of commands you'll be running. When you see a `$` preceding a block of code, that represents the command being run by a normal user. If you see a `#` prompt before the code, that indicates that it's being run by the `root` user. You don't actually type either of these symbols in when using the commands, this is just there to represent the prompt in your shell and denote that the following text is in fact a command. You can read up more on this [here](https://askubuntu.com/questions/706186/difference-between-and-in-linux-environment)!**
@@ -80,11 +79,11 @@ Let's add our new user to the `sudo` group
 
 `# su - username`
 
-Then check to see if the user has their new sudo privileges. The output should say `root`.
+Then check to see if the user has their new sudo privileges. You may be prompted for the password you just created. The output should say `root`.
 
 `$ sudo whoami`
 
-#
+### Generating key pair
 Now that we have a new user we can go ahead and start setting up key-based authentication. Let's go back over to our personal machine and open up another terminal there. It's time to [generate](https://www.ssh.com/ssh/keygen/) an SSH key pair. 
 
 This will generate a 4096 bit RSA key pair. Although the default size is 2048 bit, which is typically fine instead. You can leave the "file in which to save the key" default. You'll then be asked to set a password for the key.
@@ -92,7 +91,6 @@ This will generate a 4096 bit RSA key pair. Although the default size is 2048 bi
 `$ ssh-keygen -t rsa -b 4096`
 
 ![](images/sshart.png)
-
 
 Your new SSH key pair is now in the `.ssh` directory within your home directoy (~/.ssh or /home/username/.ssh). The file called `id_rsa` is the private key (which is protected by the password you set) and your public key is `id_rsa.pub`. We now need to transfer the public key over to our honeypot server so the authentication can take place when we connect. There's a couple ways of doing so. If your version of SSH has the `ssh-copy-id` tool included (OpenSSH) then you can use that. Otherwise we have some other options. Let's start with the `ssh-copy-id` method.
 
@@ -109,7 +107,26 @@ This will utilize some interesting parts of GNU/Linux, including [pipes](https:/
 *Method 3:
 The last method you can do is literally just copy and paste the public key over into the `~/.ssh/authorized_keys` file on your honeypot server. If the `authorized_keys` file doesnt exist, you can just create it! Use your favorite text editor to then paste the copied public key in.*
 
-#
+You can go ahead and test your key-based authentication now!
+
+### Editing sshd_config
+Now that we successfully created and tested our new key pair, we can edit the SSH config file to disable root login as well as password authentication. Remember what we mentioned earlier about keeping a session open and using another terminal to test the changes to prevent a lockout! First let's make a backup of our current config file just out of good practice.
+
+`$ cp /etc/sshd/sshd_config /etc/ssh/sshd_config.backup`
+
+Next, use your preferred text editor ([vi](https://www.tutorialspoint.com/unix/unix-vi-editor.htm), [vim](https://www.linux.com/training-tutorials/vim-101-beginners-guide-vim/), [nano](https://linuxize.com/post/how-to-use-nano-text-editor/), etc.) and open the original config file `/etc/ssh/sshd_config`. You may need to use the `sudo` command in front of the text editor you choose, since the file requires elevated privileges to edit. 
+
+Once in the file, locate the line `#PasswordAuthentication yes`. If it starts with a `#` symbol, that means that this line is currently "commented" and not active. Start by deleting the `#` symbol and then change the `yes` to `no`. This will disable password authentication and instead allow key-based. 
+
+We can then look for the line `PermitRootLogin Yes` and change that to `no` as well. You can then save and exit you text editor. 
+
+Now we need to restart the SSH daemon for these changes to take effect. 
+
+`sudo service ssh restart`.
+
+Make sure to leave this current SSH session active and open another terminal window so that you can test the latest changes and see if you're able to still log-in via SSH. If all goes well, then you've successfully made your access to the server significantly more secure! If you're having issues, make sure to double check the config was edited properly and that your public key is in fact inside your honeypots `~/.ssh/authorized_hosts` file. 
+
+
 
 
 
