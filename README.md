@@ -129,13 +129,13 @@ This one is completely optional. If you plan on using an SSH honeypot like [cowr
 
 ![](images/sshport.png)
 
-While you have the `sshd_config` open in your editor, you can uncomment the `#Port 22` line and then change to whatever port number you'd like for your configuration.
+Re-open `/etc/ssh/sshd_config` in your editor, uncomment the `#Port 22` line and then change to whatever port number you'd like for your configuration. Then you can save and exit your editor. 
 
 ### Restart SSH daemon 
 
 Now we need to restart the SSH service for these changes to take effect. 
 
-`$ sudo [service](https://askubuntu.com/questions/903354/difference-between-systemctl-and-service-commands/903405) ssh restart`
+`$ sudo service ssh restart`
 
 Make sure to leave this current SSH session active and open another terminal window so that you can test the latest changes and see if you're able to still log in via SSH. If all goes well, then you've successfully made your access to the server significantly more secure! If you're having issues, make sure to double check the config was edited properly and that your public key is in fact inside your newly created honeypot user's `~/.ssh/authorized_hosts` file. 
 
