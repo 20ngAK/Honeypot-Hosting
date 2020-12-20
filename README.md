@@ -13,6 +13,8 @@ I won't go into too much detail with all of the differences between various buzz
 # Choosing a provider
 There are a variety of providers to choose from when deciding where to spin up a virtual machine or instance for your honeypot. Some of the more common ones used are [Amazon's EC2](https://aws.amazon.com/ec2/?ec2-whats-new.sort-by=item.additionalFields.postDateTime&ec2-whats-new.sort-order=desc), [Google Cloud](https://cloud.google.com/compute), [Oracle Cloud](https://www.oracle.com/cloud/), [Digital Ocean](https://www.digitalocean.com/pricing/) and [Linode](https://www.linode.com/pricing/). Most of these companies will offer some sort of credit for new users. This will allow you to test out the service and/or certain system configuration for a given period of time, ranging from 30 days to 1 year in some cases (AWS EC2). You'll almost always have to input your credit card information when creating an account for one of these services.
 
+![](images/providers.png)
+
 ---
 Here's a few credit links to some popular providers:
 * [AWS EC2 free-tier for 1 year](https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc)
