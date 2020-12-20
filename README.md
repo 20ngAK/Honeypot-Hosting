@@ -57,15 +57,13 @@ Since we're not using key-based authentication yet and only have the `root` pass
 
 *Example of the PuTTY client. Note `user@ipaddress` format.*
 
-![](images/sshconnection.png)
-
 # Hardening SSH
 Since this server will soon be turned into a honeypot, there's some things we can do to ensure we retain secure administrative access. One of the best ways mentioned earlier, was to disable password authentication and use SSH keys instead. Another way involves disabling `root` login. We instead create a separate user with [`sudo`](https://www.linux.com/training-tutorials/linux-101-introduction-sudo/) privileges and log in as that new user going forward. This will help prevent the common [bruteforcing](https://blog.sucuri.net/2013/07/ssh-brute-force-the-10-year-old-attack-that-still-persists.html) attacks done against exposed SSH services, especially targeting the `root` user.
 
 Before we start, it's important to note that we don't want to accidentally get locked out of our own system by making a mistake with SSH configuration changes. **Always keep at least one SSH session open during and after making changes. You can then open another terminal window and attempt to login and ensure the recent changes didn't lock you out!** Go ahead and SSH into you server, if you're not already and let's start by creating a new user.
 
 
-Replace `username` with the user name you'd like to use. You'll be prompted to input a password. When asked to input user info, you can leave those fields blank.
+Replace `username` with the user name you'd like to use. You'll be prompted to input a password. When asked to input user info, you can leave those fields blank and press `enter`.
 
 `$ adduser username` 
 
@@ -82,9 +80,9 @@ Then check to see if the user has their new sudo privileges. You may be prompted
 `$ sudo whoami`
 
 ### Generating a key pair
-Now that we have a new user we can go ahead and start setting up key-based authentication. Let's go back over to our personal machine and open up another terminal there. It's time to [generate](https://www.ssh.com/ssh/keygen/) an SSH key pair. 
+Now that we have a new user we can go ahead and start setting up key-based authentication. Let's go back over to our personal machine and open up another terminal there. It's time to [generate](https://www.ssh.com/ssh/keygen/) an SSH key pair. If you're using PuTTY on Windows, you'll need to download [PuTTYgen](https://www.puttygen.com/).
 
-This will generate a 4096-bit RSA key pair. Although the default size is 2048-bit, which is typically fine instead of the larger 4096 bit. You can leave the "file in which to save the key" default. You'll then be asked to set a password for the key.
+This will generate a 4096-bit RSA key pair. The default size is 2048-bit, which is typically fine as opposed to the larger 4096 bit key. You can leave the "file in which to save the key" default and press `enter`. You'll then be asked to set a password for the key.
 
 `$ ssh-keygen -t rsa -b 4096`
 
@@ -112,7 +110,7 @@ You can go ahead and test your key-based authentication now!
 ### Editing sshd_config
 Now that we successfully created and tested our new key pair, we can edit the `sshd_config` file to disable root login and password authentication. Remember what we mentioned earlier about keeping a session open and using another terminal to test the changes to prevent a lockout! First let's make a backup of our current config file just out of good practice.
 
-`$ cp /etc/sshd/sshd_config /etc/ssh/sshd_config.backup`
+`$ cp /etc/ssh/sshd_config /etc/ssh/sshd_config.backup`
 
 Next, use your preferred text editor ([vi](https://www.tutorialspoint.com/unix/unix-vi-editor.htm), [vim](https://www.linux.com/training-tutorials/vim-101-beginners-guide-vim/), [nano](https://linuxize.com/post/how-to-use-nano-text-editor/), etc.) and open the original config file `/etc/ssh/sshd_config`. You may need to use the `sudo` command in front of the text editor you choose, since the file requires elevated privileges to edit. 
 
@@ -128,15 +126,19 @@ Now we need to restart the SSH daemon for these changes to take effect.
 
 `$ sudo service ssh restart`
 
-Make sure to leave this current SSH session active and open another terminal window so that you can test the latest changes and see if you're able to still log-in via SSH. If all goes well, then you've successfully made your access to the server significantly more secure! If you're having issues, make sure to double check the config was edited properly and that your public key is in fact inside your newly created honeypot user's `~/.ssh/authorized_hosts` file. 
+Make sure to leave this current SSH session active and open another terminal window so that you can test the latest changes and see if you're able to still log in via SSH. If all goes well, then you've successfully made your access to the server significantly more secure! If you're having issues, make sure to double check the config was edited properly and that your public key is in fact inside your newly created honeypot user's `~/.ssh/authorized_hosts` file. 
 
-### SSH convenience 
+### SSH alias
+Instead of having to type in the username and IP address of our honeypot every time we want to connect, we can set up an [alias](https://ostechnix.com/how-to-create-ssh-alias-in-linux/) to make connecting a little more convenient.
 
+On your personal machine, head over to the `.ssh` directory. Inside there you'll see a file called `config`. This isn't to be confused with the `sshd_config` that we edited above. If it isn't there you can just create the file, as it's empty by default! This will allow us to input all info pertaining to our server (e.g. username, ip address, port number, etc.) while also letting us give it a nickname. Follow the format below and input you own settings:
 
+![](images/sshalias.png)
 
+Going forward, anytime we want to connect to our server we can just use `$ ssh honeypot`. 
 
-
-
+# Start your honeypot!
+You now have a hardened base install ready for further installation and configuration of your specific honeypot! 
 
 
 
