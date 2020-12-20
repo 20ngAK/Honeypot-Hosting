@@ -81,14 +81,14 @@ Then check to see if the user has their new sudo privileges. You may be prompted
 
 `$ sudo whoami`
 
-### Generating key pair
+### Generating a key pair
 Now that we have a new user we can go ahead and start setting up key-based authentication. Let's go back over to our personal machine and open up another terminal there. It's time to [generate](https://www.ssh.com/ssh/keygen/) an SSH key pair. 
 
 This will generate a 4096-bit RSA key pair. Although the default size is 2048-bit, which is typically fine instead of the larger 4096 bit. You can leave the "file in which to save the key" default. You'll then be asked to set a password for the key.
 
 `$ ssh-keygen -t rsa -b 4096`
 
-![](images/sshart.png)
+![](images/keygen.png)
 
 Your new SSH key pair is now in the `.ssh` directory within your home directoy (~/.ssh or /home/username/.ssh). The file called `id_rsa` is the private key (which is protected by the password you set) and your public key is `id_rsa.pub`. We now need to transfer the public key (`id_rsa.pub`) over to our honeypot server so the authentication can take place when we connect. There's a couple ways of doing so. If your version of SSH has the `ssh-copy-id` tool included (OpenSSH) then you can use that. Otherwise we have some other options. Let's start with the `ssh-copy-id` method.
 
@@ -107,6 +107,8 @@ The last method you can do is literally just copy and paste the public key over 
 
 You can go ahead and test your key-based authentication now!
 
+![](images/ssh_login.png)
+
 ### Editing sshd_config
 Now that we successfully created and tested our new key pair, we can edit the `sshd_config` file to disable root login and password authentication. Remember what we mentioned earlier about keeping a session open and using another terminal to test the changes to prevent a lockout! First let's make a backup of our current config file just out of good practice.
 
@@ -116,7 +118,11 @@ Next, use your preferred text editor ([vi](https://www.tutorialspoint.com/unix/u
 
 Once in the file, locate the line `#PasswordAuthentication yes`. If it starts with a `#` symbol, that means that this line is currently "commented" and not active. Start by deleting the `#` symbol and then change the `yes` to `no`. This will disable password authentication and instead allow key-based. 
 
+![](images/authentication.png)
+
 We can then look for the line `PermitRootLogin Yes` and change that to `no` as well. You can then save and exit you text editor. 
+
+![](images/rootlogin.png)
 
 Now we need to restart the SSH daemon for these changes to take effect. 
 
@@ -124,6 +130,7 @@ Now we need to restart the SSH daemon for these changes to take effect.
 
 Make sure to leave this current SSH session active and open another terminal window so that you can test the latest changes and see if you're able to still log-in via SSH. If all goes well, then you've successfully made your access to the server significantly more secure! If you're having issues, make sure to double check the config was edited properly and that your public key is in fact inside your newly created honeypot user's `~/.ssh/authorized_hosts` file. 
 
+### SSH convenience 
 
 
 
