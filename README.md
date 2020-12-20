@@ -124,9 +124,18 @@ We can then look for the line `PermitRootLogin Yes` and change that to `no` as w
 
 ![](images/rootlogin.png)
 
-Now we need to restart the SSH daemon for these changes to take effect. 
+### Changing SSH port 
+This one is completely optional. If you plan on using an SSH honeypot like [cowrie](https://github.com/cowrie/cowrie) then you'll eventually need to make some changes so your real SSH service can listen on another port and you'll be able to retain administrative access. This will then allow us to have port 22 open for attackers to hit the fake SSH service provided by the honeypot. If you change the port number just remember you'll have to specify the port with the `-p` option when connecting via SSH (e.g `$ ssh user@ipaddress -p 333`).
 
-`$ sudo service ssh restart`
+![](images/sshport.png)
+
+While you have the `sshd_config` open in your editor, you can uncomment the `#Port 22` line and then change to whatever port number you'd like for your configuration.
+
+### Restart SSH daemon 
+
+Now we need to restart the SSH service for these changes to take effect. 
+
+`$ sudo [service](https://askubuntu.com/questions/903354/difference-between-systemctl-and-service-commands/903405) ssh restart`
 
 Make sure to leave this current SSH session active and open another terminal window so that you can test the latest changes and see if you're able to still log in via SSH. If all goes well, then you've successfully made your access to the server significantly more secure! If you're having issues, make sure to double check the config was edited properly and that your public key is in fact inside your newly created honeypot user's `~/.ssh/authorized_hosts` file. 
 
@@ -140,7 +149,4 @@ On your personal machine, head over to the `.ssh` directory. Inside there you'll
 Going forward, anytime we want to connect to our server we can just use `$ ssh honeypot`. 
 
 # Start your honeypot!
-You now have a base install ready for further installation and configuration of your chosen honeypot! Feel free to reach out to me in Slack with any questions @AK.
-
-
-
+You now have a base install ready for further installation and configuration of your chosen honeypot! Feel free to reach out to me in Slack @AK with any questions or to correct an error in this document. 
