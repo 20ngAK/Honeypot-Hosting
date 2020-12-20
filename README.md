@@ -140,8 +140,7 @@ On your personal machine, head over to the `.ssh` directory. Inside there you'll
 Going forward, anytime we want to connect to our server we can just use `$ ssh honeypot`. 
 
 # Start your honeypot!
-You now have a hardened base install ready for further installation and configuration of your specific honeypot! 
-
+You now have a base install ready for further installation and configuration of your chosen honeypot! Feel free to reach out to me in Slack with any questions @AK.
 
 
 
